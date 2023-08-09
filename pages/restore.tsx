@@ -1,23 +1,24 @@
 import { NextPage } from "next";
-import Head from "next/head";
+// import Head from "next/head";
 import Image from "next/image";
 import { useState } from "react";
 import { UploadDropzone } from "react-uploader";
 import { Uploader } from "uploader";
 import { CompareSlider } from "../components/CompareSlider";
-import Footer from "../components/Footer";
-import Header from "../components/Header";
+// import Footer from "../components/Footer";
+// import Header from "../components/Header";
 import LoadingDots from "../components/LoadingDots";
 import Toggle from "../components/Toggle";
 import appendNewToName from "../utils/appendNewToName";
 import downloadPhoto from "../utils/downloadPhoto";
 import NSFWPredictor from "../utils/nsfwCheck";
-import va from "@vercel/analytics";
+// import va from "@vercel/analytics";
 import { useSession, signIn } from "next-auth/react";
 import useSWR from "swr";
 import { Rings } from "react-loader-spinner";
 
 // Configuration for the uploader
+
 const uploader = Uploader({
   apiKey: !!process.env.NEXT_PUBLIC_UPLOAD_API_KEY
     ? process.env.NEXT_PUBLIC_UPLOAD_API_KEY
@@ -46,10 +47,10 @@ const Home: NextPage = () => {
       let isSafe = false;
       try {
         isSafe = await NSFWPredictor.isSafeImg(file);
-        if (!isSafe) va.track("NSFW Image blocked");
-      } catch (error) {
-        console.error("NSFW predictor threw an error", error);
-      }
+      //   if (!isSafe) va.track("NSFW Image blocked");
+      // } catch (error) {
+      //   console.error("NSFW predictor threw an error", error);
+      // }
       if (!isSafe) {
         return "Detected a NSFW image which is not allowed.";
       }
@@ -57,7 +58,7 @@ const Home: NextPage = () => {
         return "No more generations left for the day.";
       }
       return undefined;
-    },
+    }
   };
 
   const UploadDropZone = () => (
@@ -99,24 +100,24 @@ const Home: NextPage = () => {
   }
 
   return (
-    <div className="flex max-w-6xl mx-auto flex-col items-center justify-center py-2 min-h-screen">
+    <div className="flex flex-col items-center justify-center max-w-6xl min-h-screen py-2 mx-auto">
       <Head>
         <title>Restore Photos</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <Header photo={session?.user?.image || undefined} />
-      <main className="flex flex-1 w-full flex-col items-center justify-center text-center px-4 mt-4 sm:mb-0 mb-8">
+      <main className="flex flex-col items-center justify-center flex-1 w-full px-4 mt-4 mb-8 text-center sm:mb-0">
         <a
           href="https://twitter.com/nutlope/status/1626074563481051136"
           target="_blank"
           rel="noreferrer"
-          className="border rounded-2xl py-1 px-4 text-slate-500 text-sm mb-5 hover:text-slate-600 transition duration-300 ease-in-out"
+          className="px-4 py-1 mb-5 text-sm transition duration-300 ease-in-out border rounded-2xl text-slate-500 hover:text-slate-600"
         >
           <span className="font-semibold">647,143 images</span> restored and
           counting
         </a>
-        <h1 className="mx-auto max-w-4xl font-display text-4xl font-bold tracking-normal text-slate-900 sm:text-6xl mb-5">
+        <h1 className="max-w-4xl mx-auto mb-5 text-4xl font-bold tracking-normal font-display text-slate-900 sm:text-6xl">
           Restore any face photo
         </h1>
         {status === "authenticated" && data && (
@@ -132,7 +133,7 @@ const Home: NextPage = () => {
             </span>
           </p>
         )}
-        <div className="flex justify-between items-center w-full flex-col mt-4">
+        <div className="flex flex-col items-center justify-between w-full mt-4">
           <Toggle
             className={`${restoredLoaded ? "visible mb-6" : "invisible"}`}
             sideBySide={sideBySide}
@@ -169,7 +170,7 @@ const Home: NextPage = () => {
                 </div>
                 <button
                   onClick={() => signIn("google")}
-                  className="bg-gray-200 text-black font-semibold py-3 px-6 rounded-2xl flex items-center space-x-2"
+                  className="flex items-center px-6 py-3 space-x-2 font-semibold text-black bg-gray-200 rounded-2xl"
                 >
                   <Image
                     src="/google.png"
@@ -192,24 +193,24 @@ const Home: NextPage = () => {
             />
           )}
           {restoredImage && originalPhoto && !sideBySide && (
-            <div className="flex sm:space-x-4 sm:flex-row flex-col">
+            <div className="flex flex-col sm:space-x-4 sm:flex-row">
               <div>
-                <h2 className="mb-1 font-medium text-lg">Original Photo</h2>
+                <h2 className="mb-1 text-lg font-medium">Original Photo</h2>
                 <Image
                   alt="original photo"
                   src={originalPhoto}
-                  className="rounded-2xl relative"
+                  className="relative rounded-2xl"
                   width={475}
                   height={475}
                 />
               </div>
-              <div className="sm:mt-0 mt-8">
-                <h2 className="mb-1 font-medium text-lg">Restored Photo</h2>
+              <div className="mt-8 sm:mt-0">
+                <h2 className="mb-1 text-lg font-medium">Restored Photo</h2>
                 <a href={restoredImage} target="_blank" rel="noreferrer">
                   <Image
                     alt="restored photo"
                     src={restoredImage}
-                    className="rounded-2xl relative sm:mt-0 mt-2 cursor-zoom-in"
+                    className="relative mt-2 rounded-2xl sm:mt-0 cursor-zoom-in"
                     width={475}
                     height={475}
                     onLoadingComplete={() => setRestoredLoaded(true)}
@@ -221,7 +222,7 @@ const Home: NextPage = () => {
           {loading && (
             <button
               disabled
-              className="bg-black rounded-full text-white font-medium px-4 pt-2 pb-3 mt-8 hover:bg-black/80 w-40"
+              className="w-40 px-4 pt-2 pb-3 mt-8 font-medium text-white bg-black rounded-full hover:bg-black/80"
             >
               <span className="pt-4">
                 <LoadingDots color="white" style="large" />
@@ -233,15 +234,15 @@ const Home: NextPage = () => {
               className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mt-8 max-w-[575px]"
               role="alert"
             >
-              <div className="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+              <div className="px-4 py-2 font-bold text-white bg-red-500 rounded-t">
                 Please try again in 24 hours
               </div>
-              <div className="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
+              <div className="px-4 py-3 text-red-700 bg-red-100 border border-t-0 border-red-400 rounded-b">
                 {error}
               </div>
             </div>
           )}
-          <div className="flex space-x-2 justify-center">
+          <div className="flex justify-center space-x-2">
             {originalPhoto && !loading && (
               <button
                 onClick={() => {
@@ -250,7 +251,7 @@ const Home: NextPage = () => {
                   setRestoredLoaded(false);
                   setError(null);
                 }}
-                className="bg-black rounded-full text-white font-medium px-4 py-2 mt-8 hover:bg-black/80 transition"
+                className="px-4 py-2 mt-8 font-medium text-white transition bg-black rounded-full hover:bg-black/80"
               >
                 Upload New Photo
               </button>
@@ -260,7 +261,7 @@ const Home: NextPage = () => {
                 onClick={() => {
                   downloadPhoto(restoredImage!, appendNewToName(photoName!));
                 }}
-                className="bg-white rounded-full text-black border font-medium px-4 py-2 mt-8 hover:bg-gray-100 transition"
+                className="px-4 py-2 mt-8 font-medium text-black transition bg-white border rounded-full hover:bg-gray-100"
               >
                 Download Restored Photo
               </button>
@@ -274,3 +275,7 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+function generatePhoto(arg0: string) {
+  throw new Error("Function not implemented.");
+}
+
